@@ -24,7 +24,6 @@ wheels/
 venv/
 env/
 ENV/
-myvenv/
 
 # IDE
 .idea/
@@ -39,11 +38,6 @@ myvenv/
 
 # Logs
 *.log
-
-# Local development
-.env
-.env.local
-.env.*.local
 
 # Database
 *.db
