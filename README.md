@@ -1,6 +1,6 @@
-# Müşteri Davranış Analizi ve İade Riski Tahmini API'leri
+# Müşteri Davranış Analizi ve Ürün Öneri Sistemi
 
-Bu proje, Northwind veritabanı üzerinde iki farklı derin öğrenme modeli kullanarak müşteri davranışlarını analiz eden ve iade riskini tahmin eden iki ayrı API içerir.
+Bu proje, Northwind veritabanı üzerinde üç farklı derin öğrenme modeli kullanarak müşteri davranışlarını analiz eden ve tahminler yapan API'ler içerir.
 
 ## API'ler
 
@@ -40,6 +40,37 @@ Siparişlerin iade riskini tahmin eder ve risk faktörlerini açıklar.
   }
   ```
 
+### 3. Ürün Kategori Öneri Sistemi API (Port: 8002)
+Müşterilerin geçmiş alışveriş davranışlarına dayanarak, yeni ürün kategorilerinde alışveriş yapma olasılıklarını tahmin eder.
+
+**Endpoint:** http://127.0.0.1:8002
+- Dokümantasyon: http://127.0.0.1:8002/docs
+- ReDoc: http://127.0.0.1:8002/redoc
+
+#### Endpoints:
+- `POST /predict`: Kategori bazlı öneriler
+  ```json
+  {
+    "customer_id": "ALFKI"
+  }
+  ```
+
+#### Örnek Yanıt:
+```json
+[
+    {
+        "category_id": 1,
+        "category_name": "Beverages",
+        "probability": 0.85
+    },
+    {
+        "category_id": 2,
+        "category_name": "Condiments",
+        "probability": 0.72
+    }
+]
+```
+
 ## Kurulum
 
 1. Gerekli paketleri yükleyin:
@@ -65,6 +96,11 @@ pip install -r requirements.txt
   - return_risk_scaler.pkl
   - return_risk_columns.pkl
   - return_risk_background.npy
+- Ürün Kategori Öneri Sistemi için:
+  - product_recommendation_model.h5
+  - product_recommendation_scaler.pkl
+  - product_recommendation_columns.pkl
+  - category_mapping.pkl
 
 ## Çalıştırma
 
@@ -76,6 +112,11 @@ uvicorn app:app --reload --host 127.0.0.1 --port 8000
 2. İade Riski Tahmini API'sini başlatın:
 ```bash
 uvicorn app2:app --reload --host 127.0.0.1 --port 8001
+```
+
+3. Ürün Kategori Öneri Sistemi API'sini başlatın:
+```bash
+uvicorn app3:app --reload --host 127.0.0.1 --port 8002
 ```
 
 ## API Kullanımı
@@ -102,14 +143,14 @@ curl -X 'POST' \
 }'
 ```
 
-### Risk Açıklaması
+### Ürün Kategori Önerileri
 ```bash
 curl -X 'POST' \
-  'http://127.0.0.1:8001/explain_risk' \
+  'http://127.0.0.1:8002/predict' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "order_id": 10248
+  "customer_id": "ALFKI"
 }'
 ```
 
@@ -122,6 +163,9 @@ curl -X 'POST' \
 - SHAP ile model açıklanabilirliği
 - Veritabanı bağlantı kontrolü
 - Model dosyası varlık kontrolü
+- Derin öğrenme tabanlı tahmin modelleri
+- Müşteri davranış analizi
+- Kategori bazlı ürün önerileri
 
 ## Geliştirme
 
